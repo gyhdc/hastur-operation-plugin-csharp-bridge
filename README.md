@@ -6,6 +6,8 @@
 
 本项目基于 [rayxuln/hastur-operation-plugin](https://github.com/rayxuln/hastur-operation-plugin) 的思路和架构继续扩展。原项目的核心价值是让 coding agent 能通过 HTTP 控制 Godot 编辑器；本 fork 的重点是让 C# 项目也能顺手开发。不尝试做任意 C# eval，而是采用更稳定的路线：正常写 C# 文件，正常构建，再通过结构化命令观察编辑器和运行中游戏。
 
+同时优化了原项目有的Godot编辑器输出噪音过多，加大token消耗的问题（真没额度了），并且编写了小脚本辅助agent使用常用功能，节省token消耗。
+
 ## 它解决什么问题？
 
 Coding agent 很擅长改文件和跑命令，但 Godot 编辑器是 GUI 应用，很多关键信息存在于编辑器场景树、运行态场景树、资源系统和项目设置里，单靠终端很难稳定观察。
