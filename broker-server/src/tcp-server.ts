@@ -197,7 +197,7 @@ export class TcpServer {
 			status: 'connected',
 			type: (data.type as 'editor' | 'game') || 'editor',
 		}
-		this.executorManager.add(executorInfo)
+		this.executorManager.add(executorInfo, 'register message accepted')
 
 		this.sendToSocket(socketId, {
 			type: 'register_result',
@@ -223,7 +223,7 @@ export class TcpServer {
 		if (!ctx) return
 
 		if (ctx.executorId) {
-			this.executorManager.remove(ctx.executorId)
+			this.executorManager.remove(ctx.executorId, 'socket closed')
 		}
 
 		for (const [, pending] of ctx.pendingRequests) {

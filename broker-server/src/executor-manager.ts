@@ -1,14 +1,22 @@
-import type { ExecutorInfo } from './types.js'
+import type { ExecutorEvent, ExecutorInfo } from './types.js'
 
 export class ExecutorManager {
 	private executors: Map<string, ExecutorInfo> = new Map()
+	private recentEvents: ExecutorEvent[] = []
+	private maxRecentEvents = 25
 
-	add(executor: ExecutorInfo): void {
+	add(executor: ExecutorInfo, reason = 'register'): void {
 		this.executors.set(executor.id, executor)
+		this.recordEvent('registered', executor, reason)
 	}
 
-	remove(id: string): boolean {
-		return this.executors.delete(id)
+	remove(id: string, reason = 'disconnect'): boolean {
+		const executor = this.executors.get(id)
+		const removed = this.executors.delete(id)
+		if (executor) {
+			this.recordEvent('disconnected', executor, reason)
+		}
+		return removed
 	}
 
 	get(id: string): ExecutorInfo | undefined {
@@ -17,6 +25,18 @@ export class ExecutorManager {
 
 	getAll(): ExecutorInfo[] {
 		return Array.from(this.executors.values())
+	}
+
+	findAllByProjectPath(path: string): ExecutorInfo[] {
+		const normalized = normalizeProjectPath(path)
+		return this.getAll().filter((executor) => (
+			executor.status === 'connected'
+			&& normalizeProjectPath(executor.project_path) === normalized
+		))
+	}
+
+	getRecentEvents(): ExecutorEvent[] {
+		return [...this.recentEvents]
 	}
 
 	findById(id: string): ExecutorInfo | undefined {
@@ -44,4 +64,23 @@ export class ExecutorManager {
 		}
 		return undefined
 	}
+
+	private recordEvent(event: ExecutorEvent['event'], executor: ExecutorInfo, reason: string): void {
+		this.recentEvents.push({
+			timestamp: new Date().toISOString(),
+			event,
+			executor_id: executor.id,
+			project_name: executor.project_name,
+			project_path: executor.project_path,
+			type: executor.type,
+			reason,
+		})
+		if (this.recentEvents.length > this.maxRecentEvents) {
+			this.recentEvents.splice(0, this.recentEvents.length - this.maxRecentEvents)
+		}
+	}
+}
+
+function normalizeProjectPath(path: string): string {
+	return path.trim().replace(/\\/g, '/').replace(/\/+$/g, '').toLowerCase()
 }

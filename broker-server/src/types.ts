@@ -11,6 +11,32 @@ export interface ExecutorInfo {
 	type: 'editor' | 'game'
 }
 
+export interface ExecutorEvent {
+	timestamp: string
+	event: 'registered' | 'disconnected'
+	executor_id: string
+	project_name: string
+	project_path: string
+	type: 'editor' | 'game'
+	reason: string
+}
+
+export interface RecommendedNextRequest {
+	method: string
+	path: string
+	body?: Record<string, unknown>
+	hint: string
+}
+
+export interface RuntimeExecutorStatus {
+	project_path: string
+	editor_connected: boolean
+	game_connected: boolean
+	editor_executors: ExecutorInfo[]
+	game_executors: ExecutorInfo[]
+	recommended_next_request: RecommendedNextRequest
+}
+
 export interface TcpMessage {
 	type: string
 	data?: unknown

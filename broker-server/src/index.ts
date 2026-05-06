@@ -1,8 +1,8 @@
-import crypto from 'crypto'
 import { Command } from 'commander'
 import { ExecutorManager } from './executor-manager.js'
 import { TcpServer } from './tcp-server.js'
 import { createHttpApp } from './http-server.js'
+import { resolveAuthToken } from './auth-token.js'
 
 const program = new Command()
 
@@ -18,15 +18,21 @@ const tcpPort = parseInt(options.tcpPort as string, 10)
 const httpPort = parseInt(options.httpPort as string, 10)
 const host = options.host as string
 
-const authToken = (options.authToken as string) || crypto.randomBytes(32).toString('hex')
+const authTokenResolution = resolveAuthToken({
+	cliToken: options.authToken as string | undefined,
+	envToken: process.env.HASTUR_AUTH_TOKEN,
+})
+const authToken = authTokenResolution.token
 
-if (!options.authToken) {
-	console.log(`Auto-generated auth token: ${authToken}`)
-}
+console.log(`Auth token source: ${authTokenResolution.source}`)
+console.log(`Auth token: ${authToken}`)
+console.log(`Copy for new Codex sessions: auth-token ${authToken}`)
 
 const executorManager = new ExecutorManager()
 const tcpServer = new TcpServer(executorManager)
-const app = createHttpApp(executorManager, tcpServer, authToken, tcpPort, httpPort)
+const app = createHttpApp(executorManager, tcpServer, authToken, tcpPort, httpPort, {
+	authTokenSource: authTokenResolution.source,
+})
 
 async function main(): Promise<void> {
 	await tcpServer.start(host, tcpPort)

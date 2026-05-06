@@ -1,0 +1,4 @@
+interface:
+  display_name: "Godot Project Collab"
+  short_description: "Efficient Godot 4.6 help and probes"
+  default_prompt: "Use $godot-project-collab to answer or inspect this Godot 4.6 project with the lightest reliable workflow."

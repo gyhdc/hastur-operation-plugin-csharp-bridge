@@ -12,13 +12,13 @@ config_version=5
 [application]
 
 config/name="hastur-operation-plugin"
-run/main_scene="uid://ba3ji60uq0fef"
+run/main_scene="res://scenes/Test1.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-GameExecutor="*uid://7yjc3ixh2laf"
+GameExecutor="*res://addons/hasturoperationgd_CS/game_executor.gd"
 
 [dotnet]
 
@@ -26,7 +26,7 @@ project/assembly_name="hastur-operation-plugin"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/hasturoperationgd/plugin.cfg")
+enabled=PackedStringArray("res://addons/hasturoperationgd_CS/plugin.cfg")
 
 [physics]
 
