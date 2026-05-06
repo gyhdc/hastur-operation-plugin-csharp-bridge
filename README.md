@@ -10,7 +10,7 @@
 
 ## 它解决什么问题？
 
-Coding agent 很擅长改文件和跑命令，但 Godot 编辑器是 GUI 应用，很多关键信息存在于编辑器场景树、运行态场景树、资源系统和项目设置里，单靠终端很难稳定观察。
+agent 擅于改文件和执行命令，但 Godot 编辑器是 GUI 应用，很多关键信息存在于编辑器场景树、运行态场景树、资源系统和项目设置里，单靠终端很难稳定观察。编写的demo实时运行状态也无法检测，难以调试。
 
 这个 C# Bridge 版本提供：
 
@@ -49,13 +49,6 @@ npm run dev
 
 ```bash
 npx tsx src/index.ts --http-port 5302 --tcp-port 5301 --auth-token your-secret-token
-```
-
-PowerShell 示例：
-
-```powershell
-$env:HASTUR_AUTH_TOKEN="your-secret-token"
-npm run dev
 ```
 
 ### 2. 安装 Godot 插件
